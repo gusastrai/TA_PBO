@@ -1,8 +1,15 @@
 <?php
 session_start();
+
 if(empty($_SESSION['login'])){
   header("location:login.php");
 }
+include("include/class.user.php");
+
+if (isset($_SESSION['user'])) {
+  $user = unserialize($_SESSION['user']);
+} 
+
 ?>
 <!DOCTYPE html>
 <html>

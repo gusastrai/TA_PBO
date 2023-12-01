@@ -2,19 +2,36 @@
 
 	session_start();
 	include_once 'include/class.user.php';
-	$user = new User();
 
 	$error = "";
 
 	if (isset($_POST['submit'])) { 
 		extract($_POST);
+
 		if (!empty($username) && !empty($password)) {
-			$login = $user->check_login($username, $password);
-			if ($login) {
-				header("location:index.php");
+			
+			if ($username === "admin" && $password === "admin123") {
+				$admin = new Admin();
+				$login = $admin->check_login($username, $password);
+				if ($login) {
+					$admin->set_info($username);
+					$_SESSION['user'] = serialize($admin);
+					header("location:index.php");
+				} else {
+					$error = "Username atau Password salah";
+				}
 			} else {
-				$error = "Username atau Password salah";
+				$pasien = new Pasien();
+				$login = $pasien->check_login($username, $password);
+				if ($login) {
+					$pasien->set_info($username);
+					$_SESSION['user'] = serialize($pasien);
+					header("location:pasien.php");
+				} else {
+					$error = "Username atau Password salah";
+				}
 			}
+			
 		} else {
 			$error = "Username atau Password tidak boleh kosong";
 		}
@@ -30,8 +47,9 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body background="gambar/background.jpg">
- <h1>Rumah Sakit Umum</h1>
- 
+
+	<h1>Rumah Sakit Umum</h1>
+
 	<div class="kotak_login">
 		<p class="tulisan_login">login</p>
 		<p style="color:red;"><?= $error; ?></p>
@@ -46,8 +64,9 @@
 				
 		</form>
 		
+		<p>Belum punya akun ? <a href="register.php">register now</a></p>
 	</div>
- 
- 
+
+
 </body>
 </html>

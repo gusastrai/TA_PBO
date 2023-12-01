@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 06 Bulan Mei 2019 pada 23.18
--- Versi server: 10.1.32-MariaDB
--- Versi PHP: 7.2.5
+-- Waktu pembuatan: 01 Des 2023 pada 09.03
+-- Versi server: 10.4.27-MariaDB
+-- Versi PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -21,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `rumah_sakit`
 --
+CREATE DATABASE IF NOT EXISTS `rumah_sakit` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+USE `rumah_sakit`;
 
 -- --------------------------------------------------------
 
@@ -32,7 +33,7 @@ CREATE TABLE `detail_obat` (
   `id_detail` int(11) NOT NULL,
   `id_inap` int(11) NOT NULL,
   `id_obat` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `detail_obat`
@@ -41,7 +42,8 @@ CREATE TABLE `detail_obat` (
 INSERT INTO `detail_obat` (`id_detail`, `id_inap`, `id_obat`) VALUES
 (6, 1, 996),
 (7, 2, 996),
-(8, 3, 997);
+(8, 3, 997),
+(9, 1, 997);
 
 -- --------------------------------------------------------
 
@@ -57,16 +59,17 @@ CREATE TABLE `inap` (
   `id_pasien` int(11) NOT NULL,
   `id_kamar` int(11) NOT NULL,
   `status` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `inap`
 --
 
 INSERT INTO `inap` (`id_inap`, `tgl_masuk`, `tgl_keluar`, `lama`, `id_pasien`, `id_kamar`, `status`) VALUES
-(1, '2019-05-06', '2019-05-08', 2, 132, 1239, 0),
-(2, '2019-05-07', '2019-05-09', 2, 133, 1240, 1),
-(3, '2019-05-07', '2019-05-08', 1, 134, 1239, 1);
+(1, '2023-11-23', '2023-11-25', 2, 132, 1239, 1),
+(2, '2023-11-22', '2023-11-24', 2, 133, 1240, 1),
+(3, '2023-11-26', '2023-11-27', 1, 134, 1239, 1),
+(4, '2023-12-03', '2023-12-13', 10, 139, 1240, 0);
 
 --
 -- Trigger `inap`
@@ -96,15 +99,15 @@ CREATE TABLE `kamar` (
   `kelas` varchar(10) NOT NULL,
   `kapasitas` int(10) NOT NULL,
   `harga` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `kamar`
 --
 
 INSERT INTO `kamar` (`id_kamar`, `nama_kamar`, `kelas`, `kapasitas`, `harga`) VALUES
-(1239, 'Anggrek', 'Ekonomi', 10, 300000),
-(1240, 'Melati', 'VIP', 9, 200000);
+(1239, 'Anggrek', 'Ekonomi', 9, 200000),
+(1240, 'Melati', 'VIP', 9, 300000);
 
 -- --------------------------------------------------------
 
@@ -116,7 +119,7 @@ CREATE TABLE `obat` (
   `id_obat` int(11) NOT NULL,
   `nama_obat` varchar(20) NOT NULL,
   `harga` int(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `obat`
@@ -137,17 +140,20 @@ CREATE TABLE `pasien` (
   `nama_pasien` varchar(50) NOT NULL,
   `jk` varchar(12) NOT NULL,
   `no_telp` varchar(12) NOT NULL,
-  `alamat` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `alamat` varchar(50) NOT NULL,
+  `id_user` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `pasien`
 --
 
-INSERT INTO `pasien` (`id_pasien`, `nama_pasien`, `jk`, `no_telp`, `alamat`) VALUES
-(132, 'ulva dwi', 'Perempuan', '098777888987', 'malang'),
-(133, 'siti afin', 'Perempuan', '087654345667', 'surabaya'),
-(134, 'abc', 'Perempuan', '098', 'malang');
+INSERT INTO `pasien` (`id_pasien`, `nama_pasien`, `jk`, `no_telp`, `alamat`, `id_user`) VALUES
+(132, 'ulva dwi', 'Perempuan', '098777888987', 'malang', 11),
+(133, 'siti afin', 'Perempuan', '087654345667', 'surabaya', 12),
+(134, 'abc', 'Perempuan', '098', 'malang', 13),
+(138, 'jonyyy', 'laki-laki', '097438157018', 'jl.munggugianti no.24', 10),
+(139, 'tesa', 'laki-laki', '029473713248', 'jl mawar', 14);
 
 -- --------------------------------------------------------
 
@@ -160,15 +166,17 @@ CREATE TABLE `pembayaran` (
   `tanggal` date NOT NULL,
   `id_inap` int(11) NOT NULL,
   `total` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `pembayaran`
 --
 
 INSERT INTO `pembayaran` (`id_pembayaran`, `tanggal`, `id_inap`, `total`) VALUES
-(4, '0000-00-00', 1, 602000),
-(5, '2019-05-07', 2, 402000);
+(4, '2023-11-29', 2, 602000),
+(5, '2023-11-21', 4, 3000000),
+(8, '2023-12-06', 4, 3000000),
+(9, '2023-12-02', 1, 405000);
 
 --
 -- Trigger `pembayaran`
@@ -193,19 +201,22 @@ DELIMITER ;
 --
 
 CREATE TABLE `users` (
-  `uid` int(10) NOT NULL,
+  `uid` int(11) NOT NULL,
   `uname` varchar(20) NOT NULL,
-  `upass` varchar(20) NOT NULL,
-  `fullname` varchar(50) NOT NULL,
-  `uemail` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `upass` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data untuk tabel `users`
 --
 
-INSERT INTO `users` (`uid`, `uname`, `upass`, `fullname`, `uemail`) VALUES
-(1, 'ulva', '827ccb0eea8a706c4c34', 'ulva dwi mariyani', 'ulvhadwii@gmail.com');
+INSERT INTO `users` (`uid`, `uname`, `upass`) VALUES
+(0, 'admin', 'admin123'),
+(10, 'jonyyy', 'jonyyy'),
+(11, 'ulvadwi', 'ulvadwi123'),
+(12, 'sitiafin', 'sitiafin123'),
+(13, 'abc', 'abc123'),
+(14, 'tess', '123');
 
 -- --------------------------------------------------------
 
@@ -250,7 +261,7 @@ CREATE TABLE `view_pembayaranobat` (
 --
 DROP TABLE IF EXISTS `view_passien`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_passien`  AS  select `inap`.`id_inap` AS `id_inap`,`pasien`.`id_pasien` AS `idpasien`,`pasien`.`nama_pasien` AS `nama_pasien` from (`inap` join `pasien` on((`inap`.`id_pasien` = `pasien`.`id_pasien`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_passien`  AS SELECT `inap`.`id_inap` AS `id_inap`, `pasien`.`id_pasien` AS `idpasien`, `pasien`.`nama_pasien` AS `nama_pasien` FROM (`inap` join `pasien` on(`inap`.`id_pasien` = `pasien`.`id_pasien`))  ;
 
 -- --------------------------------------------------------
 
@@ -259,7 +270,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `view_pembayarankamar`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_pembayarankamar`  AS  select `inap`.`id_inap` AS `id_inap`,`inap`.`lama` AS `lama`,`kamar`.`harga` AS `harga`,(`inap`.`lama` * `kamar`.`harga`) AS `bayarkamar` from (`inap` join `kamar` on((`inap`.`id_kamar` = `kamar`.`id_kamar`))) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_pembayarankamar`  AS SELECT `inap`.`id_inap` AS `id_inap`, `inap`.`lama` AS `lama`, `kamar`.`harga` AS `harga`, `inap`.`lama`* `kamar`.`harga` AS `bayarkamar` FROM (`inap` join `kamar` on(`inap`.`id_kamar` = `kamar`.`id_kamar`))  ;
 
 -- --------------------------------------------------------
 
@@ -268,7 +279,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `view_pembayaranobat`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_pembayaranobat`  AS  select `inap`.`id_inap` AS `id_inap`,sum(`obat`.`harga`) AS `totalObat` from ((`inap` join `detail_obat` on((`inap`.`id_inap` = `detail_obat`.`id_inap`))) join `obat` on((`detail_obat`.`id_obat` = `obat`.`id_obat`))) group by `inap`.`id_inap` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_pembayaranobat`  AS SELECT `inap`.`id_inap` AS `id_inap`, sum(`obat`.`harga`) AS `totalObat` FROM ((`inap` join `detail_obat` on(`inap`.`id_inap` = `detail_obat`.`id_inap`)) join `obat` on(`detail_obat`.`id_obat` = `obat`.`id_obat`)) GROUP BY `inap`.`id_inap``id_inap`  ;
 
 --
 -- Indexes for dumped tables
@@ -306,7 +317,8 @@ ALTER TABLE `obat`
 -- Indeks untuk tabel `pasien`
 --
 ALTER TABLE `pasien`
-  ADD PRIMARY KEY (`id_pasien`);
+  ADD PRIMARY KEY (`id_pasien`),
+  ADD KEY `id_user` (`id_user`);
 
 --
 -- Indeks untuk tabel `pembayaran`
@@ -329,43 +341,43 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `detail_obat`
 --
 ALTER TABLE `detail_obat`
-  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT untuk tabel `inap`
 --
 ALTER TABLE `inap`
-  MODIFY `id_inap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_inap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `kamar`
 --
 ALTER TABLE `kamar`
-  MODIFY `id_kamar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1241;
+  MODIFY `id_kamar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1244;
 
 --
 -- AUTO_INCREMENT untuk tabel `obat`
 --
 ALTER TABLE `obat`
-  MODIFY `id_obat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=998;
+  MODIFY `id_obat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=999;
 
 --
 -- AUTO_INCREMENT untuk tabel `pasien`
 --
 ALTER TABLE `pasien`
-  MODIFY `id_pasien` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
+  MODIFY `id_pasien` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
 
 --
 -- AUTO_INCREMENT untuk tabel `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  MODIFY `id_pembayaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_pembayaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `uid` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -384,6 +396,12 @@ ALTER TABLE `detail_obat`
 ALTER TABLE `inap`
   ADD CONSTRAINT `FK_inap_kamar` FOREIGN KEY (`id_kamar`) REFERENCES `kamar` (`id_kamar`),
   ADD CONSTRAINT `FK_inap_pasien` FOREIGN KEY (`id_pasien`) REFERENCES `pasien` (`id_pasien`);
+
+--
+-- Ketidakleluasaan untuk tabel `pasien`
+--
+ALTER TABLE `pasien`
+  ADD CONSTRAINT `FK_iduser` FOREIGN KEY (`id_user`) REFERENCES `users` (`uid`);
 
 --
 -- Ketidakleluasaan untuk tabel `pembayaran`
